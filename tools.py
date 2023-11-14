@@ -420,7 +420,7 @@ def setRoom(room_dim, mic_arrays_car, source_pos_car_list, signal_list, typ, rt6
             for i, (source_pos_car, signal) in enumerate(zip(source_pos_car_list, signal_list)):
                 room.add_source(source_pos_car, signal=signal, delay=0)
             room.simulate()
-            output_dir = 'D:/Coderlife/SSL in spherical domain/Anechoic/Array_output_{}/'.format(array_id)
+            output_dir = '/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Anechoic/Array_output_{}/'.format(array_id)
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             for i in range(len(source_pos_car_list)):
@@ -436,7 +436,7 @@ def setRoom(room_dim, mic_arrays_car, source_pos_car_list, signal_list, typ, rt6
             for i, (source_pos_car, signal) in enumerate(zip(source_pos_car_list, signal_list)):
                 room.add_source(source_pos_car, signal=signal, delay=0)
             room.simulate()
-            output_dir = 'D:/Coderlife/SSL in spherical domain/Reverberant/Array_output_{}/'.format(array_id)
+            output_dir = '/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Reverberant/Array_output_{}/'.format(array_id)
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             for i in range(len(source_pos_car_list)):
@@ -844,7 +844,7 @@ def setRoom_multi(room_dim, mic_pos_car, source_pos_car_list, signal_list, typ, 
         room.simulate()
         # output
         for i in range(len(source_pos_car_list)):
-            room.mic_array.to_wav('D:/Coderlife/SSL in spherical domain/Anechoic/Array_output{}.wav'.format(i), norm=True, bitdepth=np.float32)
+            room.mic_array.to_wav('/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Anechoic/Array_output{}.wav'.format(i), norm=True, bitdepth=np.float32)
         return room, None
     if typ == "Reverb":
         # Invert Sabine's formula to obtain the parameters for the ISM simulator
@@ -861,7 +861,7 @@ def setRoom_multi(room_dim, mic_pos_car, source_pos_car_list, signal_list, typ, 
         # output
         for i in range(len(source_pos_car_list)):
             room.mic_array.to_wav(
-                'D:/Coderlife/SSL in spherical domain/Reverberant/Array_output{}.wav'.format(
+                '/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Reverberant/Array_output{}.wav'.format(
                     i), norm=True, bitdepth=np.float32)
         # Estimate the real T60 using the pyroomacoustics function
         rt60_est = np.mean(room.measure_rt60())  # get the average value for all frequency bands
