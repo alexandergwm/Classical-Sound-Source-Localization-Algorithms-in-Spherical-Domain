@@ -476,7 +476,7 @@ def ssl_SHmethod_broad(mic_signals, fs, mic_pos_sph, Theta_l, Phi_l, method, sph
     Mic_Theta = mic_pos_sph[:,1]
     Mic_Phi = mic_pos_sph[:,2]
     signal_single_channel = mic_signals[:, 0]
-    signal_type = 'Multiple'
+    signal_type, freq = detect_signal_type(signal_single_channel, fs,0.9)
     theta = np.arange(0, np.pi, resolution / 180 * np.pi)
     phi = np.arange(0, 2 * np.pi, resolution / 180 * np.pi)
     x = []
@@ -824,6 +824,30 @@ def ssl_SHmethod_broad(mic_signals, fs, mic_pos_sph, Theta_l, Phi_l, method, sph
         return out, source_positions
     
 
+def calculate_spherical_coordinates(source_position, mic_array_position):
+    """
+    This function is used to calculate the spherical coordinate of source corresponding to different microphone array
+    :param source_position:  The cartesian position of source (x, y, z)
+    :param mic_array_position: The cartesian position of microphone array (x, y, z)
+    :return: (r, theta, phi): Spherical coordinate of source corresponding to microphone array (r, theta, phi)
+    """
+    # Calculate the relative position between microphone array and source
+    relative_position = source_position - mic_array_position
+    # Calculate the distance
+    r = np.linalg.norm(relative_position)
+
+    # Elevation theta
+    theta = np.arccos(relative_position[2] / r) # relative_position[2] 是 z 分量
+
+    # Azimuth phi
+    phi = np.arctan2(relative_position[1], relative_position[0]) # relative_position[0] 和 relative_position[1] 是 x 和 y 分量
+
+    if phi < 0:
+        phi += 2 * np.pi
+
+    return r, theta, phi
+
+
 def setRoom_multi(room_dim, mic_pos_car, source_pos_car_list, signal_list, typ, rt60_tgt=None):
     """
     Set anechoic room or normal room
@@ -861,8 +885,7 @@ def setRoom_multi(room_dim, mic_pos_car, source_pos_car_list, signal_list, typ, 
         # output
         for i in range(len(source_pos_car_list)):
             room.mic_array.to_wav(
-                '/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Reverberant/Array_output{}.wav'.format(
-                    i), norm=True, bitdepth=np.float32)
+                '/content/Classical-Sound-Source-Localization-Algorithms-in-Spherical-Domain/Reverberant/Array_output{}.wav'.format(i), norm=True, bitdepth=np.float32)
         # Estimate the real T60 using the pyroomacoustics function
         rt60_est = np.mean(room.measure_rt60())  # get the average value for all frequency bands
     return room, rt60_est

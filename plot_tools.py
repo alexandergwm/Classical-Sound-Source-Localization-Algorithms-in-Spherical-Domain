@@ -106,6 +106,47 @@ def plot_grid(grid_points):
     plt.show()
 
 
+def plot_option_multiArray(room, mic_arrays_car, source_pos_car_list):
+    """
+    Plot the microphone array in the room
+    :param room:
+    :param mic_arrays_car: The list of cartesian positions of microphone arrays
+    :param source_pos_car_list: The list of cartesian positions of sound sources
+    """
+    fig = plt.figure(dpi=500)
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the room
+    for wall in room.walls:
+        corners = wall.corners.T
+        ax.plot(corners[[0, 1, 2, 3, 0], 0], corners[[0, 1, 2, 3, 0], 1], corners[[0, 1, 2, 3, 0], 2], 'k')
+
+    # Plot the microphone array
+    for i, mic_pos_car in enumerate(mic_arrays_car):
+        if i == 2:  # For the third microphone array
+            ax.scatter(mic_pos_car[:, 0], mic_pos_car[:, 1], mic_pos_car[:, 2], c='b', marker='o',
+                       label='Microphone Array Global')
+        else:
+            ax.scatter(mic_pos_car[:, 0], mic_pos_car[:, 1], mic_pos_car[:, 2], c='g', marker='o',
+                       label=f'Microphone Array {i+1}')
+
+    # Plot the source locations
+    for i, source_pos_car in enumerate(source_pos_car_list):
+        ax.scatter(source_pos_car[0], source_pos_car[1], source_pos_car[2], c='r', marker='x', label=f'Source {i+1}', s=100)
+    
+    # Set axis labels
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Y [m]')
+    ax.set_zlabel('Z [m]')
+    
+    # Show the legend
+    ax.legend()
+
+    # Show the plot
+    plt.show()
+
+
+
 def plot_option(room, mic_arrays_car, source_pos_car_list):
     """
     Plot the microphone array in the room
