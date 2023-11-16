@@ -60,16 +60,15 @@ def cart2sph(coords):
 
 def unitSph2cart(aziElev):
     """
-    根据方位角和高度角获取单位向量的笛卡尔坐标。
-    与sph2cart相似，但假设单位向量，并使用矩阵进行输入和输出，
-    而不是分开的坐标向量。
-
-    参数:
-    aziElev (numpy.ndarray): 方位角-高度角对。形状应为 (N, 2)。
-
-    返回值:
-    numpy.ndarray: 形状为 (N, 3) 的笛卡尔坐标
+    The function `unitSph2cart` converts azimuth and elevation coordinates to Cartesian coordinates.
+    
+    :param aziElev: The parameter "aziElev" is a numpy array that represents the azimuth and elevation
+    angles of a point in spherical coordinates. The shape of the array should be (N, 2), where N is the
+    number of points. The first column represents the azimuth angle in radians, and the second column
+    :return: a numpy array `xyz` which contains the Cartesian coordinates (x, y, z) corresponding to the
+    input azimuth and elevation angles.
     """
+
     if aziElev.shape[1] != 2:
         aziElev = aziElev.T
 
@@ -131,22 +130,22 @@ def detect_signal_type(signal,fs, threshold_ratio=0.5):
     #
     A = A[:len(A)//2]
 
-    # 计算频率成分的绝对值
+    # Calculate the absolute value of the frequency components
     magnitude = np.abs(A)
 
-    # 找出最大频率分量的索引
+    # Find the index of the largest frequency component
     max_index = np.argmax(magnitude)
 
-    # 计算阈值（最大值的一部分）
+    # Calculate the threshold (part of the maximum value)
     threshold = threshold_ratio * magnitude[max_index]
 
-    # 移除最大频率成分
+    # Remove maximum frequency components
     magnitude[magnitude == magnitude[max_index]] = 0
 
-    # 找出剩余部分是否有超过阈值的频率分量
+    # Find out if there are frequency components above the threshold in the remaining portion
     second_peak = np.max(magnitude)
 
-    # 如果剩余部分没有超过阈值的频率分量，则判断为单频信号，否则为多频信号
+    # If the remaining part has no frequency component exceeding the threshold, it is judged as a single-frequency signal, otherwise it is a multi-frequency signal
     if second_peak < threshold:
         frequency = max_index * fs / (len(A)*2)  # convert the index to actual frequency
         return "Single", frequency
@@ -294,11 +293,11 @@ def ssl_SHmethod(MicrophoneArray, Theta_l, Phi_l, method, sphere_config, plot_me
     if method == 'SHMVDR':
         resolution = 1
         sphCOV = np.dot(p_nm, p_nm.T.conj())
-        lambda_reg = 1e-2  # 正则化因子，需要根据你的应用进行调整
+        lambda_reg = 1e-2  #  Regularization factors,
         sphCOV += lambda_reg * np.eye(sphCOV.shape[0])
         # print(sphCOV.shape)
         out = []
-        P_mvdr = np.zeros((len(theta), len(phi)), dtype=complex)  # MUSIC谱
+        P_mvdr = np.zeros((len(theta), len(phi)), dtype=complex)  # MUSIC specturm
         for num1 in range(len(theta)):
             for num2 in range(len(phi)):
                 U_nm = np.zeros(((N + 1) ** 2), dtype=complex)

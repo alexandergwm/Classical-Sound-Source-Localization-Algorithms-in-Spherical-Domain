@@ -261,7 +261,6 @@ def verify_shapeofArray(mic_pos_car):
 
 
 def plot_SHfunction(Ndec):
-    # 计算 theta, phi 网格
     theta = np.linspace(0, np.pi, 100)
     phi = np.linspace(0, 2 * np.pi, 100)
     theta, phi = np.meshgrid(theta, phi)
